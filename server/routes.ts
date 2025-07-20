@@ -53,7 +53,7 @@ function calculateScores(metaTags: Record<string, string>, ogTags: Record<string
   };
 }
 
-function generateRecommendations(metaTags: Record<string, string>, ogTags: Record<string, string>, twitterTags: Record<string, string>) {
+function generateRecommendations(metaTags: Record<string, string>, ogTags: Record<string, string>, twitterTags: Record<string, string>, scores: { overall: number; meta: number; social: number; technical: number }) {
   const recommendations: Array<{
     type: 'warning' | 'error' | 'success';
     title: string;
@@ -61,59 +61,135 @@ function generateRecommendations(metaTags: Record<string, string>, ogTags: Recor
     code?: string;
   }> = [];
 
-  if (!metaTags.title) {
-    recommendations.push({
-      type: 'error',
-      title: 'Missing Title Tag',
-      description: 'Add a descriptive title tag to improve search engine visibility.',
-      code: '<title>Your Page Title Here</title>'
-    });
-  } else if (metaTags.title.length < 30 || metaTags.title.length > 60) {
+  // Meta score improvements
+  if (scores.meta < 80) {
+    if (!metaTags.title) {
+      recommendations.push({
+        type: 'error',
+        title: 'Missing Title Tag',
+        description: 'Add a descriptive title tag to improve search engine visibility and boost your Meta Score from ' + scores.meta + '/100.',
+        code: '<title>Your Page Title Here</title>'
+      });
+    } else if (metaTags.title.length < 30 || metaTags.title.length > 60) {
+      recommendations.push({
+        type: 'warning',
+        title: 'Optimize Title Length',
+        description: `Title should be between 30-60 characters for optimal display. Current: ${metaTags.title.length} chars. This could improve your Meta Score by 20 points.`,
+      });
+    }
+
+    if (!metaTags.description) {
+      recommendations.push({
+        type: 'error',
+        title: 'Missing Meta Description',
+        description: 'Add a meta description to improve click-through rates and boost your Meta Score by up to 40 points.',
+        code: '<meta name="description" content="Your compelling page description here (120-160 characters)">'
+      });
+    } else if (metaTags.description.length < 120 || metaTags.description.length > 160) {
+      recommendations.push({
+        type: 'warning',
+        title: 'Optimize Description Length',
+        description: `Meta description should be 120-160 characters. Current: ${metaTags.description.length} chars. Optimizing this could add 20 points to your Meta Score.`,
+      });
+    }
+
+    if (!metaTags.viewport) {
+      recommendations.push({
+        type: 'warning',
+        title: 'Add Viewport Meta Tag',
+        description: 'Include a viewport meta tag for mobile responsiveness. This adds 20 points to your Meta Score.',
+        code: '<meta name="viewport" content="width=device-width, initial-scale=1.0">'
+      });
+    }
+  }
+
+  // Social score improvements
+  if (scores.social < 80) {
+    if (!ogTags['og:title']) {
+      recommendations.push({
+        type: 'warning',
+        title: 'Add Open Graph Title',
+        description: 'Include og:title to improve social media sharing. This adds 25 points to your Social Score.',
+        code: '<meta property="og:title" content="Your compelling title">'
+      });
+    }
+
+    if (!ogTags['og:description']) {
+      recommendations.push({
+        type: 'warning',
+        title: 'Add Open Graph Description',
+        description: 'Include og:description for better social media previews. This adds 25 points to your Social Score.',
+        code: '<meta property="og:description" content="Your page description">'
+      });
+    }
+
+    if (!ogTags['og:image']) {
+      recommendations.push({
+        type: 'warning',
+        title: 'Add Open Graph Image',
+        description: 'Adding an og:image will significantly improve social media sharing and add 25 points to your Social Score.',
+        code: '<meta property="og:image" content="https://example.com/social-image.jpg">'
+      });
+    }
+
+    if (!ogTags['og:url']) {
+      recommendations.push({
+        type: 'warning',
+        title: 'Add Open Graph URL',
+        description: 'Include og:url for proper social media attribution. This adds 15 points to your Social Score.',
+        code: '<meta property="og:url" content="https://yourwebsite.com/current-page">'
+      });
+    }
+
+    if (!twitterTags['twitter:card']) {
+      recommendations.push({
+        type: 'error',
+        title: 'Implement Twitter Cards',
+        description: 'Add Twitter Card meta tags to control how your content appears on Twitter. This adds 10 points to your Social Score.',
+        code: '<meta name="twitter:card" content="summary_large_image">\n<meta name="twitter:title" content="Your title">\n<meta name="twitter:description" content="Your description">\n<meta name="twitter:image" content="https://example.com/image.jpg">'
+      });
+    }
+
+    if (!twitterTags['twitter:image'] && !ogTags['og:image']) {
+      recommendations.push({
+        type: 'warning',
+        title: 'Add Twitter Image',
+        description: 'Include a Twitter-specific image or ensure og:image is present for better Twitter sharing.',
+        code: '<meta name="twitter:image" content="https://example.com/twitter-image.jpg">'
+      });
+    }
+  }
+
+  // Technical improvements
+  if (scores.technical < 90) {
     recommendations.push({
       type: 'warning',
-      title: 'Optimize Title Length',
-      description: 'Title should be between 30-60 characters for optimal display in search results.',
+      title: 'Improve Technical SEO',
+      description: 'Consider optimizing page load speed, implementing structured data, and ensuring mobile-friendliness to boost your Technical Score.',
     });
   }
 
-  if (!metaTags.description) {
+  // Overall score recommendations
+  if (scores.overall < 60) {
     recommendations.push({
       type: 'error',
-      title: 'Missing Meta Description',
-      description: 'Add a meta description to improve click-through rates from search results.',
-      code: '<meta name="description" content="Your page description here">'
+      title: 'Critical SEO Issues Found',
+      description: `Your overall SEO score is ${scores.overall}/100. Focus on implementing the above recommendations to significantly improve your search visibility.`,
     });
-  } else if (metaTags.description.length < 120 || metaTags.description.length > 160) {
+  } else if (scores.overall < 80) {
     recommendations.push({
       type: 'warning',
-      title: 'Optimize Description Length',
-      description: 'Meta description should be between 120-160 characters for optimal display.',
+      title: 'Good SEO Foundation, Room for Improvement',
+      description: `Your SEO score is ${scores.overall}/100. Implementing the suggested improvements could push you into the excellent range (80+).`,
     });
   }
 
-  if (!ogTags['og:image']) {
-    recommendations.push({
-      type: 'warning',
-      title: 'Add Open Graph Image',
-      description: 'Adding an og:image meta tag will improve how your content appears when shared on social media.',
-      code: '<meta property="og:image" content="https://example.com/image.jpg">'
-    });
-  }
-
-  if (!twitterTags['twitter:card']) {
-    recommendations.push({
-      type: 'error',
-      title: 'Implement Twitter Cards',
-      description: 'Add Twitter Card meta tags to control how your content appears when shared on Twitter.',
-      code: '<meta name="twitter:card" content="summary_large_image">\n<meta name="twitter:image" content="https://example.com/image.jpg">'
-    });
-  }
-
-  if (recommendations.length === 0) {
+  // Success message for high-performing sites
+  if (scores.overall >= 80 && scores.meta >= 80 && scores.social >= 80) {
     recommendations.push({
       type: 'success',
-      title: 'SEO Well Optimized',
-      description: 'Your page has good SEO optimization with proper meta tags and social media tags.',
+      title: 'Excellent SEO Implementation',
+      description: `Outstanding! Your overall score is ${scores.overall}/100. Your site has excellent SEO optimization with proper meta tags and social media integration.`,
     });
   }
 
@@ -182,12 +258,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const scores = calculateScores(metaTags, ogTags, twitterTags);
       
       // Generate recommendations
-      const recommendations = generateRecommendations(metaTags, ogTags, twitterTags);
+      const recommendations = generateRecommendations(metaTags, ogTags, twitterTags, scores);
 
       // Create analysis record
       const analysis = await storage.createSeoAnalysis({
         url: normalizedUrl,
-        title: metaTags.title || domain,
+        title: metaTags.title || null,
         domain,
         metaTags,
         ogTags,
