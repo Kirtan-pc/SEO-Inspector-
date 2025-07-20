@@ -85,11 +85,11 @@ export function RecentAnalysis({ analyses, onLoadAnalysis, onRefresh, currentAna
   };
 
   return (
-    <div className="space-y-6">
-      <Card className="sticky top-8">
-        <CardContent className="p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-            <History className="h-5 w-5 text-gray-600 mr-2" />
+    <div className="space-y-4 sm:space-y-6">
+      <Card className="lg:sticky lg:top-8">
+        <CardContent className="p-4 sm:p-6">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+            <History className="h-5 w-5 text-gray-600 dark:text-gray-400 mr-2" />
             Recent Analysis
           </h3>
           
@@ -97,27 +97,27 @@ export function RecentAnalysis({ analyses, onLoadAnalysis, onRefresh, currentAna
             {analyses.map((analysis) => (
               <div 
                 key={analysis.id}
-                className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors"
+                className="flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg cursor-pointer transition-colors"
                 onClick={() => onLoadAnalysis(analysis.id)}
               >
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center space-x-2 mb-1">
                     <div className={`w-4 h-4 rounded-full flex-shrink-0 ${getScoreColor(analysis.scores?.overall || 0)}`}></div>
-                    <h4 className="text-sm font-medium text-gray-900 truncate">
+                    <h4 className="text-sm font-medium text-gray-900 dark:text-white truncate">
                       {analysis.title || analysis.domain}
                     </h4>
                   </div>
-                  <p className="text-xs text-gray-500 font-mono truncate">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 font-mono truncate">
                     {analysis.domain}
                   </p>
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
                     {formatDistanceToNow(new Date(analysis.analyzedAt), { addSuffix: true })}
                   </p>
                 </div>
                 <div className="flex items-center space-x-1 text-right">
                   <span className={`text-sm font-semibold ${
-                    (analysis.scores?.overall || 0) >= 80 ? 'text-green-600' :
-                    (analysis.scores?.overall || 0) >= 60 ? 'text-yellow-600' : 'text-red-600'
+                    (analysis.scores?.overall || 0) >= 80 ? 'text-green-600 dark:text-green-400' :
+                    (analysis.scores?.overall || 0) >= 60 ? 'text-yellow-600 dark:text-yellow-400' : 'text-red-600 dark:text-red-400'
                   }`}>
                     {analysis.scores?.overall || 0}
                   </span>
@@ -135,14 +135,14 @@ export function RecentAnalysis({ analyses, onLoadAnalysis, onRefresh, currentAna
             
             {analyses.length === 0 && (
               <div className="text-center py-8">
-                <p className="text-gray-500 text-sm">No recent analyses</p>
-                <p className="text-gray-400 text-xs mt-1">Analyze a website to get started</p>
+                <p className="text-gray-500 dark:text-gray-400 text-sm">No recent analyses</p>
+                <p className="text-gray-400 dark:text-gray-500 text-xs mt-1">Analyze a website to get started</p>
               </div>
             )}
           </div>
           
           {analyses.length > 0 && (
-            <div className="mt-4 pt-4 border-t border-gray-200">
+            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
               <Button
                 variant="ghost"
                 size="sm"
@@ -160,8 +160,8 @@ export function RecentAnalysis({ analyses, onLoadAnalysis, onRefresh, currentAna
 
       {/* Quick Actions */}
       <Card>
-        <CardContent className="p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+        <CardContent className="p-4 sm:p-6">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Quick Actions</h3>
           <div className="space-y-2">
             <Button 
               variant="ghost" 

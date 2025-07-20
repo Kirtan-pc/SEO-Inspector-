@@ -52,8 +52,8 @@ export function UrlInput({ onAnalysisStart, onAnalysisComplete }: UrlInputProps)
 
   return (
     <Card className="mb-8">
-      <CardContent className="p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Analyze Website SEO</h2>
+      <CardContent className="p-4 sm:p-6">
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Analyze Website SEO</h2>
         <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
           <div className="flex-1">
             <Input

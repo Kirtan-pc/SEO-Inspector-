@@ -2,7 +2,17 @@
 
 ## Overview
 
-This is a full-stack web application built for analyzing SEO metadata of websites. The application provides comprehensive SEO analysis including meta tags, social media tags, search previews, and actionable recommendations. It features a modern React frontend with shadcn/ui components and an Express.js backend with PostgreSQL database integration.
+This is a full-stack web application built for analyzing SEO metadata of websites. The application provides comprehensive SEO analysis including meta tags, social media tags, search previews, and actionable recommendations. It features a modern React frontend with shadcn/ui components, full dark/light mode support, PDF export functionality, and an Express.js backend with in-memory storage for development.
+
+## Recent Changes
+
+### January 2025
+- **Theme System**: Implemented complete dark/light/system theme switching with proper CSS variables
+- **PDF Export**: Added comprehensive PDF generation for SEO analysis reports with jsPDF integration
+- **Clear History**: Made functional clear history button that properly removes all analysis data
+- **Dark Mode UI**: Fixed all headings and text visibility issues in dark mode across all components
+- **Responsive Design**: Improved mobile layout with proper padding, alignment, and responsive breakpoints
+- **Settings Dialog**: Added accessible settings panel with theme controls and radio group selection
 
 ## User Preferences
 
@@ -25,9 +35,12 @@ The application follows a monorepo structure with clear separation between clien
 - **Build Tool**: Vite with custom configuration for monorepo setup
 - **UI Library**: shadcn/ui components built on Radix UI primitives
 - **Styling**: Tailwind CSS with custom CSS variables for theming
+- **Theme System**: Complete dark/light/system mode support with localStorage persistence
 - **Router**: Wouter for lightweight client-side routing
 - **HTTP Client**: Axios for API requests
 - **State Management**: TanStack Query for server state, React hooks for local state
+- **PDF Generation**: jsPDF with html2canvas for comprehensive report exports
+- **Responsive Design**: Mobile-first approach with proper breakpoints and spacing
 
 ### Backend Architecture
 - **Runtime**: Node.js with Express.js framework

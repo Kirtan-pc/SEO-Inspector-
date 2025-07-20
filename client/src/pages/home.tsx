@@ -56,10 +56,10 @@ export default function Home() {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+        <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-8">
           {/* Main Content */}
-          <main className="flex-1">
+          <main className="flex-1 min-w-0 order-2 lg:order-1">
             <UrlInput 
               onAnalysisStart={() => setIsAnalyzing(true)}
               onAnalysisComplete={handleAnalysisComplete}
@@ -71,7 +71,7 @@ export default function Home() {
           </main>
 
           {/* Sidebar */}
-          <aside className="lg:w-80">
+          <aside className="w-full lg:w-80 order-1 lg:order-2">
             <RecentAnalysis 
               analyses={recentAnalyses || []}
               onLoadAnalysis={handleLoadAnalysis}

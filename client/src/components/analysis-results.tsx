@@ -12,7 +12,7 @@ interface AnalysisResultsProps {
 
 export function AnalysisResults({ analysis }: AnalysisResultsProps) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 sm:space-y-8">
       <SeoScoreOverview analysis={analysis} />
       <ScoreImprovementGuide analysis={analysis} />
       <SearchPreview analysis={analysis} />

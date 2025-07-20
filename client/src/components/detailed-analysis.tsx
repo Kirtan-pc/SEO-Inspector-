@@ -31,21 +31,21 @@ export function DetailedAnalysis({ analysis }: DetailedAnalysisProps) {
 
   return (
     <Card>
-      <CardContent className="p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-6">Detailed SEO Analysis</h3>
+      <CardContent className="p-4 sm:p-6">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">Detailed SEO Analysis</h3>
         
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           {/* Basic Meta Tags */}
-          <div className="border-b border-gray-200 pb-6">
-            <h4 className="text-md font-medium text-gray-900 mb-4 flex items-center">
-              <Tags className="h-5 w-5 text-gray-600 mr-2" />
+          <div className="border-b border-gray-200 dark:border-gray-700 pb-4 sm:pb-6">
+            <h4 className="text-md font-medium text-gray-900 dark:text-white mb-4 flex items-center">
+              <Tags className="h-5 w-5 text-gray-600 dark:text-gray-400 mr-2" />
               Basic Meta Tags
             </h4>
             <div className="space-y-4">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center mb-1">
-                    <span className="text-sm font-medium text-gray-700">Title Tag</span>
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Title Tag</span>
                     <Badge 
                       variant={titleStatus.type === 'success' ? 'default' : titleStatus.type === 'warning' ? 'secondary' : 'destructive'}
                       className="ml-2"
@@ -58,15 +58,15 @@ export function DetailedAnalysis({ analysis }: DetailedAnalysisProps) {
                   </div>
                   {titleTag ? (
                     <>
-                      <p className="text-sm text-gray-600 font-mono bg-gray-50 p-2 rounded">
+                      <p className="text-sm text-gray-600 dark:text-gray-300 font-mono bg-gray-50 dark:bg-gray-800 p-2 rounded break-words">
                         {titleTag}
                       </p>
-                      <p className="text-xs text-gray-500 mt-1">
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                         Length: {titleTag.length} characters (Optimal: 30-60)
                       </p>
                     </>
                   ) : (
-                    <p className="text-sm text-gray-500">No title tag found</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">No title tag found</p>
                   )}
                 </div>
               </div>
