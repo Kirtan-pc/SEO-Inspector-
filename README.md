@@ -32,7 +32,7 @@ SEO Meta Analyzer is a web-based tool that analyzes any website URL and provides
 ## 🚀 How to Run Locally
 
 ```bash
-git clone https://github.com/kirtan-pc/SEO Meta Analyzer.git
+git clone https://github.com/kirtan-pc/SEO-Meta-Analyzer.git
 cd seo-inspector
 
 # Install dependencies
