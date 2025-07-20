@@ -2,12 +2,17 @@ import { History, RotateCcw, Trash2, Download, Share, Clock } from "lucide-react
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { formatDistanceToNow } from "date-fns";
+import { useMutation } from "@tanstack/react-query";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
+import { exportAnalysisToPDF } from "@/lib/pdf-export";
 import type { SeoAnalysis } from "@shared/schema";
 
 interface RecentAnalysisProps {
   analyses: SeoAnalysis[];
   onLoadAnalysis: (id: number) => void;
   onRefresh: () => void;
+  currentAnalysis?: SeoAnalysis | null;
 }
 
 function getScoreColor(score: number) {
@@ -16,7 +21,31 @@ function getScoreColor(score: number) {
   return "bg-red-500";
 }
 
-export function RecentAnalysis({ analyses, onLoadAnalysis, onRefresh }: RecentAnalysisProps) {
+export function RecentAnalysis({ analyses, onLoadAnalysis, onRefresh, currentAnalysis }: RecentAnalysisProps) {
+  const { toast } = useToast();
+
+  const clearHistoryMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiRequest("DELETE", "/api/analyses");
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/recent"] });
+      onRefresh();
+      toast({
+        title: "History Cleared",
+        description: "All analysis history has been cleared successfully.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to clear history. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
   const handleReanalyze = (e: React.MouseEvent, url: string) => {
     e.stopPropagation();
     // TODO: Implement reanalysis
@@ -24,8 +53,35 @@ export function RecentAnalysis({ analyses, onLoadAnalysis, onRefresh }: RecentAn
   };
 
   const handleClearHistory = () => {
-    // TODO: Implement clear history
-    console.log('Clearing history');
+    clearHistoryMutation.mutate();
+  };
+
+  const handleExportPDF = async () => {
+    if (!currentAnalysis) {
+      toast({
+        title: "No Analysis Selected",
+        description: "Please select an analysis to export.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      await exportAnalysisToPDF({ 
+        analysis: currentAnalysis,
+        includeRecommendations: true 
+      });
+      toast({
+        title: "PDF Exported",
+        description: `SEO analysis for ${currentAnalysis.domain} has been downloaded.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Export Failed",
+        description: "Failed to export PDF. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -92,9 +148,10 @@ export function RecentAnalysis({ analyses, onLoadAnalysis, onRefresh }: RecentAn
                 size="sm"
                 className="w-full"
                 onClick={handleClearHistory}
+                disabled={clearHistoryMutation.isPending}
               >
                 <Trash2 className="h-4 w-4 mr-2" />
-                Clear History
+                {clearHistoryMutation.isPending ? "Clearing..." : "Clear History"}
               </Button>
             </div>
           )}
@@ -106,9 +163,14 @@ export function RecentAnalysis({ analyses, onLoadAnalysis, onRefresh }: RecentAn
         <CardContent className="p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
           <div className="space-y-2">
-            <Button variant="ghost" className="w-full justify-start">
+            <Button 
+              variant="ghost" 
+              className="w-full justify-start"
+              onClick={handleExportPDF}
+              disabled={!currentAnalysis}
+            >
               <Download className="h-4 w-4 mr-3" />
-              Export Report
+              Export PDF Report
             </Button>
             <Button variant="ghost" className="w-full justify-start">
               <Share className="h-4 w-4 mr-3" />
